@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Projection T2 Hellemmes 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+:root {
+  --purple: #7B2D8E; --purple-light: #E8D5F0; --purple-dark: #4A1A55;
+  --red: #C62828; --red-light: #FFEBEE;
+  --blue: #1565C0; --blue-light: #E3F2FD;
+  --green: #2E7D32; --green-light: #E8F5E9;
+  --amber: #F57F17; --amber-light: #FFF8E1;
+  --bg: #FAFAF8; --surface: #fff; --border: #E5E5E0;
+  --text: #1a1a1a; --text2: #666; --text3: #999;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--text); line-height:1.6; }
+.container { max-width:760px; margin:0 auto; padding:24px 20px 60px; }
+h1 { font-family:'DM Serif Display',serif; font-size:28px; font-weight:400; color:var(--purple-dark); margin-bottom:4px; }
+h2 { font-family:'DM Serif Display',serif; font-size:20px; font-weight:400; margin:28px 0 10px; padding-bottom:6px; border-bottom:2px solid var(--purple); color:var(--purple-dark); }
+.subtitle { font-size:14px; color:var(--text2); margin-bottom:20px; }
+.note-box { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:16px 20px; margin-bottom:24px; font-size:13px; line-height:1.7; color:var(--text2); }
+.note-box strong { color:var(--text); }
+.note-box ul { margin:8px 0 0 18px; }
+.note-box li { margin:3px 0; }
+.tag { display:inline-block; padding:2px 8px; border-radius:4px; font-size:11px; font-weight:700; letter-spacing:0.3px; }
+.tag-f { background:var(--purple-light); color:var(--purple); }
+.tag-g { background:var(--red-light); color:var(--red); }
+.tag-gu { background:var(--blue-light); color:var(--blue); }
+.tag-j { background:var(--green-light); color:var(--green); }
+.tag-l { background:var(--amber-light); color:var(--amber); }
+.t1-grid { display:grid; grid-template-columns:repeat(5, 1fr); gap:8px; margin:12px 0 20px; }
+.t1-card { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:10px; text-align:center; }
+.t1-card .name { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; }
+.t1-card .voix { font-size:20px; font-weight:700; margin:2px 0; }
+.t1-card .pct { font-size:12px; color:var(--text2); }
+.t1-card .status { font-size:10px; margin-top:4px; font-weight:500; }
+.zone-header { display:flex; align-items:center; gap:10px; padding:8px 12px; border-radius:8px; margin:16px 0 8px; font-weight:700; font-size:13px; }
+.zone-pop { background:var(--purple-light); color:var(--purple-dark); }
+.zone-aut { background:var(--blue-light); color:var(--blue); }
+.zone-rep { background:var(--amber-light); color:var(--amber); }
+.zone-ret { background:#F3F3F0; color:var(--text2); }
+.slider-row { display:flex; align-items:center; gap:10px; margin:5px 0; padding:0 4px; }
+.slider-row label { font-size:12px; color:var(--text2); min-width:200px; flex-shrink:0; }
+.slider-row input[type=range] { flex:1; height:4px; -webkit-appearance:none; appearance:none; background:var(--border); border-radius:2px; outline:none; }
+.slider-row input[type=range]::-webkit-slider-thumb { -webkit-appearance:none; width:16px; height:16px; border-radius:50%; background:var(--purple); cursor:pointer; }
+.slider-row .val { min-width:48px; text-align:right; font-size:12px; font-weight:700; font-variant-numeric:tabular-nums; }
+.result-section { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:20px; margin-top:20px; }
+.bar-row { display:flex; align-items:center; gap:8px; margin:6px 0; }
+.bar-name { min-width:85px; font-size:13px; font-weight:700; }
+.bar-track { flex:1; height:30px; background:#F3F3F0; border-radius:6px; overflow:hidden; position:relative; }
+.bar-fill { height:100%; border-radius:6px; transition:width 0.4s ease; display:flex; align-items:center; padding-left:8px; font-size:11px; font-weight:700; color:#fff; white-space:nowrap; min-width:0; }
+.bar-pct { min-width:65px; text-align:right; font-size:13px; font-weight:700; font-variant-numeric:tabular-nums; }
+.verdict { margin-top:14px; padding:14px; border-radius:8px; font-size:15px; font-weight:700; text-align:center; letter-spacing:0.3px; }
+.verdict-win { background:var(--green-light); color:var(--green); }
+.verdict-lose { background:var(--red-light); color:var(--red); }
+.seats-grid { display:grid; grid-template-columns:repeat(3, 1fr); gap:8px; margin-top:12px; }
+.seat-card { padding:10px; border-radius:8px; text-align:center; }
+.seat-card .seat-n { font-size:24px; font-weight:700; }
+.seat-card .seat-l { font-size:11px; font-weight:500; }
+.decomp { margin-top:14px; font-size:11px; color:var(--text3); line-height:1.7; }
+.decomp strong { color:var(--text2); }
+.footer { margin-top:30px; padding-top:16px; border-top:1px solid var(--border); font-size:11px; color:var(--text3); text-align:center; }
+.confidential { display:inline-block; background:var(--red); color:#fff; font-size:10px; font-weight:700; padding:2px 8px; border-radius:4px; letter-spacing:1px; text-transform:uppercase; margin-bottom:8px; }
+@media(max-width:600px) {
+  .t1-grid { grid-template-columns:repeat(3, 1fr); }
+  .slider-row label { min-width:140px; font-size:11px; }
+  .seats-grid { grid-template-columns:repeat(3, 1fr); }
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div style="text-align:center; margin-bottom:20px;">
+  <span class="confidential">usage interne</span>
+  <h1>Projection T2 — Hellemmes 2026</h1>
+  <p class="subtitle">Simulateur de reports de voix — triangulaire du 22 mars</p>
+</div>
+<div class="note-box">
+  <strong>Contexte du second tour</strong><br>
+  Le T2 se joue en <strong>triangulaire</strong> : FOURNIER vs GHERBI vs GUERARD. Deux reservoirs de voix sont a redistribuer :
+  <ul>
+    <li><span class="tag tag-j">JAMELIN</span> <strong>1207 voix</strong> — liste retiree. Jamelin a quitte la liste lilloise de Baly apres la fusion Baly-PS. Soutien officieux pour FOURNIER, mais pas de consigne formelle publique.</li>
+    <li><span class="tag tag-l">LEBRUN</span> <strong>669 voix</strong> — elimine (sous 10%). Profil macroniste/Spillebout, electorat susceptible de se reporter vers Gherbi (PS sortant) ou Guerard (droite).</li>
+  </ul>
+</div>
+<div class="note-box">
+  <strong>Deux leviers cles</strong>
+  <ul>
+    <li><strong>Mobilisation quartiers populaires :</strong> Les 6 bureaux a faible participation au T1 (49% en moyenne) sont ceux ou FOURNIER domine. La fin du Ramadan (Aid le 19 mars) libere un reservoir de votants dans ces quartiers. Chaque point de participation en plus dans cette zone rapporte environ 34 voix nettes, majoritairement pour nous.</li>
+    <li><strong>Report Jamelin :</strong> Le taux de report est le facteur decisif. A 50% de report vers FOURNIER, on gagne confortablement. En dessous de 40%, ca se joue a quelques dizaines de voix. Un mot clair de Jamelin a ses militants vaut 5-10 points de report supplementaires.</li>
+  </ul>
+</div>
+<h2>Resultats T1 — 15 mars 2026</h2>
+<p style="font-size:12px; color:var(--text3); margin-bottom:8px;">12 756 inscrits · 6 880 votants (53,94%)</p>
+<div class="t1-grid">
+  <div class="t1-card" style="border-top:3px solid var(--red);">
+    <div class="name" style="color:var(--red);">Gherbi</div>
+    <div class="voix" style="color:var(--red);">1978</div>
+    <div class="pct">29,42%</div>
+    <div class="status" style="color:var(--red);">PS sortant</div>
+  </div>
+  <div class="t1-card" style="border-top:3px solid var(--purple);">
+    <div class="name" style="color:var(--purple);">Fournier</div>
+    <div class="voix" style="color:var(--purple);">1776</div>
+    <div class="pct">26,41%</div>
+    <div class="status" style="color:var(--purple);">LFI</div>
+  </div>
+  <div class="t1-card" style="border-top:3px solid var(--green);">
+    <div class="name" style="color:var(--green);">Jamelin</div>
+    <div class="voix" style="color:var(--green);">1207</div>
+    <div class="pct">17,95%</div>
+    <div class="status" style="color:var(--green);">Retire</div>
+  </div>
+  <div class="t1-card" style="border-top:3px solid var(--blue);">
+    <div class="name" style="color:var(--blue);">Guerard</div>
+    <div class="voix" style="color:var(--blue);">1094</div>
+    <div class="pct">16,27%</div>
+    <div class="status" style="color:var(--blue);">Divers</div>
+  </div>
+  <div class="t1-card" style="border-top:3px solid var(--amber);">
+    <div class="name" style="color:var(--amber);">Lebrun</div>
+    <div class="voix" style="color:var(--amber);">669</div>
+    <div class="pct">9,95%</div>
+    <div class="status" style="color:var(--amber);">Elimine</div>
+  </div>
+</div>
+<h2>Parametres de simulation</h2>
+<div class="zone-header zone-pop">Quartiers populaires — 6 bureaux (Engrand, Lagrange 1&2, Rostand, Dombrowski, Jenner)</div>
+<p style="font-size:11px; color:var(--text3); margin:0 0 6px 4px;">6 130 inscrits · 3 003 votants T1 (49,0%) — forte reserve LFI · effet post-Ramadan attendu</p>
+<div class="slider-row"><label>Hausse participation T2</label><input type="range" id="popUp" min="0" max="15" value="5" step="1" oninput="calc()"><span class="val" id="v_popUp">+5 pts</span></div>
+<div class="slider-row"><label>Nouveaux votants → FOURNIER</label><input type="range" id="popNF" min="30" max="80" value="55" oninput="calc()"><span class="val" id="v_popNF">55%</span></div>
+<div class="slider-row"><label>Nouveaux votants → GHERBI</label><input type="range" id="popNG" min="5" max="40" value="20" oninput="calc()"><span class="val" id="v_popNG">20%</span></div>
+<div class="slider-row"><label>Nouveaux votants → GUERARD</label><input type="range" id="popNGu" min="0" max="30" value="10" oninput="calc()"><span class="val" id="v_popNGu">10%</span></div>
+<div class="slider-row"><label>→ Blancs/nuls</label><span class="val" id="v_popB">15%</span></div>
+<div class="zone-header zone-aut">Autres bureaux — 7 bureaux (Jaures, Musique, Berthelot, Primeveres, Oudart, Monchy, Herriot)</div>
+<p style="font-size:11px; color:var(--text3); margin:0 0 6px 4px;">6 626 inscrits · 3 852 votants T1 (58,1%) — terrain Gherbi · participation deja haute</p>
+<div class="slider-row"><label>Hausse participation T2</label><input type="range" id="autUp" min="0" max="10" value="2" step="1" oninput="calc()"><span class="val" id="v_autUp">+2 pts</span></div>
+<div class="slider-row"><label>Nouveaux votants → FOURNIER</label><input type="range" id="autNF" min="10" max="50" value="25" oninput="calc()"><span class="val" id="v_autNF">25%</span></div>
+<div class="slider-row"><label>Nouveaux votants → GHERBI</label><input type="range" id="autNG" min="10" max="50" value="35" oninput="calc()"><span class="val" id="v_autNG">35%</span></div>
+<div class="slider-row"><label>Nouveaux votants → GUERARD</label><input type="range" id="autNGu" min="5" max="40" value="20" oninput="calc()"><span class="val" id="v_autNGu">20%</span></div>
+<div class="slider-row"><label>→ Blancs/nuls</label><span class="val" id="v_autB">20%</span></div>
+<div class="zone-header zone-rep">Reports JAMELIN — 1207 voix (retire, soutien officieux LFI)</div>
+<div class="slider-row"><label>→ FOURNIER</label><input type="range" id="jF" min="20" max="80" value="50" oninput="calc()"><span class="val" id="v_jF">50%</span></div>
+<div class="slider-row"><label>→ GHERBI</label><input type="range" id="jG" min="5" max="40" value="15" oninput="calc()"><span class="val" id="v_jG">15%</span></div>
+<div class="slider-row"><label>→ GUERARD</label><input type="range" id="jGu" min="0" max="20" value="5" oninput="calc()"><span class="val" id="v_jGu">5%</span></div>
+<div class="slider-row"><label>→ Abstention</label><span class="val" id="v_jA">30%</span></div>
+<div class="zone-header zone-rep">Reports LEBRUN — 669 voix (elimine, macroniste)</div>
+<div class="slider-row"><label>→ FOURNIER</label><input type="range" id="lF" min="0" max="30" value="8" oninput="calc()"><span class="val" id="v_lF">8%</span></div>
+<div class="slider-row"><label>→ GHERBI</label><input type="range" id="lG" min="10" max="60" value="30" oninput="calc()"><span class="val" id="v_lG">30%</span></div>
+<div class="slider-row"><label>→ GUERARD</label><input type="range" id="lGu" min="10" max="50" value="25" oninput="calc()"><span class="val" id="v_lGu">25%</span></div>
+<div class="slider-row"><label>→ Abstention</label><span class="val" id="v_lA">37%</span></div>
+<div class="zone-header zone-ret">Retention des listes maintenues</div>
+<div class="slider-row"><label>Retention FOURNIER</label><input type="range" id="rF" min="75" max="100" value="90" oninput="calc()"><span class="val" id="v_rF">90%</span></div>
+<div class="slider-row"><label>Retention GHERBI</label><input type="range" id="rG" min="75" max="100" value="85" oninput="calc()"><span class="val" id="v_rG">85%</span></div>
+<div class="slider-row"><label>Retention GUERARD</label><input type="range" id="rGu" min="60" max="100" value="82" oninput="calc()"><span class="val" id="v_rGu">82%</span></div>
+<div class="result-section">
+  <h2 style="border:none; margin:0 0 14px; padding:0;">Projection T2 — 22 mars 2026</h2>
+  <div class="bar-row">
+    <span class="bar-name" style="color:var(--purple);">FOURNIER</span>
+    <div class="bar-track"><div class="bar-fill" id="b_f" style="background:var(--purple);"></div></div>
+    <span class="bar-pct" id="p_f" style="color:var(--purple);"></span>
+  </div>
+  <div class="bar-row">
+    <span class="bar-name" style="color:var(--red);">GHERBI</span>
+    <div class="bar-track"><div class="bar-fill" id="b_g" style="background:var(--red);"></div></div>
+    <span class="bar-pct" id="p_g" style="color:var(--red);"></span>
+  </div>
+  <div class="bar-row">
+    <span class="bar-name" style="color:var(--blue);">GUERARD</span>
+    <div class="bar-track"><div class="bar-fill" id="b_gu" style="background:var(--blue);"></div></div>
+    <span class="bar-pct" id="p_gu" style="color:var(--blue);"></span>
+  </div>
+  <div class="verdict" id="verdict"></div>
+  <div class="seats-grid">
+    <div class="seat-card" id="s_f" style="background:var(--purple-light);"><div class="seat-n" style="color:var(--purple);" id="sn_f"></div><div class="seat-l" style="color:var(--purple);">sieges FOURNIER</div></div>
+    <div class="seat-card" id="s_g" style="background:var(--red-light);"><div class="seat-n" style="color:var(--red);" id="sn_g"></div><div class="seat-l" style="color:var(--red);">sieges GHERBI</div></div>
+    <div class="seat-card" id="s_gu" style="background:var(--blue-light);"><div class="seat-n" style="color:var(--blue);" id="sn_gu"></div><div class="seat-l" style="color:var(--blue);">sieges GUERARD</div></div>
+  </div>
+  <div class="decomp" id="decomp"></div>
+</div>
+<div class="footer">
+  Simulateur interne — Campagne FOURNIER Hellemmes 2026<br>
+  Donnees T1 officielles · Modele de projection par reports et mobilisation differentielle
+</div>
+</div>
+<script>
+const PI=6130, PV=3003, AI=6626, AV=3852;
+const T1F=1776, T1G=1978, T1GU=1094, T1J=1207, T1L=669;
+function g(id){return +document.getElementById(id).value}
+function s(id,t){document.getElementById(id).textContent=t}
+function calc(){
+  const popUp=g('popUp'), autUp=g('autUp');
+  const popNF=g('popNF'), popNG=g('popNG'), popNGu=g('popNGu');
+  const autNF=g('autNF'), autNG=g('autNG'), autNGu=g('autNGu');
+  const jF=g('jF'), jG=g('jG'), jGu=g('jGu');
+  const lF=g('lF'), lG=g('lG'), lGu=g('lGu');
+  const rF=g('rF'), rG=g('rG'), rGu=g('rGu');
+  const jA=Math.max(0,100-jF-jG-jGu);
+  const lA=Math.max(0,100-lF-lG-lGu);
+  const popB=Math.max(0,100-popNF-popNG-popNGu);
+  const autB=Math.max(0,100-autNF-autNG-autNGu);
+  s('v_popUp','+'+popUp+' pts'); s('v_autUp','+'+autUp+' pts');
+  s('v_popNF',popNF+'%'); s('v_popNG',popNG+'%'); s('v_popNGu',popNGu+'%'); s('v_popB',popB+'%');
+  s('v_autNF',autNF+'%'); s('v_autNG',autNG+'%'); s('v_autNGu',autNGu+'%'); s('v_autB',autB+'%');
+  s('v_jF',jF+'%'); s('v_jG',jG+'%'); s('v_jGu',jGu+'%'); s('v_jA',jA+'%');
+  s('v_lF',lF+'%'); s('v_lG',lG+'%'); s('v_lGu',lGu+'%'); s('v_lA',lA+'%');
+  s('v_rF',rF+'%'); s('v_rG',rG+'%'); s('v_rGu',rGu+'%');
+  const popNew=Math.round(PI*popUp/100);
+  const autNew=Math.round(AI*autUp/100);
+  const baseF=Math.round(T1F*rF/100);
+  const baseG=Math.round(T1G*rG/100);
+  const baseGu=Math.round(T1GU*rGu/100);
+  const rJF=Math.round(T1J*jF/100), rJG=Math.round(T1J*jG/100), rJGu=Math.round(T1J*jGu/100);
+  const rLF=Math.round(T1L*lF/100), rLG=Math.round(T1L*lG/100), rLGu=Math.round(T1L*lGu/100);
+  const nPF=Math.round(popNew*popNF/100), nPG=Math.round(popNew*popNG/100), nPGu=Math.round(popNew*popNGu/100);
+  const nAF=Math.round(autNew*autNF/100), nAG=Math.round(autNew*autNG/100), nAGu=Math.round(autNew*autNGu/100);
+  const four=baseF+rJF+rLF+nPF+nAF;
+  const gher=baseG+rJG+rLG+nPG+nAG;
+  const guer=baseGu+rJGu+rLGu+nPGu+nAGu;
+  const total=four+gher+guer;
+  const pF=(four/total*100).toFixed(1);
+  const pG=(gher/total*100).toFixed(1);
+  const pGu=(guer/total*100).toFixed(1);
+  document.getElementById('b_f').style.width=pF+'%';
+  document.getElementById('b_f').textContent=four+' voix';
+  document.getElementById('b_g').style.width=pG+'%';
+  document.getElementById('b_g').textContent=gher+' voix';
+  document.getElementById('b_gu').style.width=pGu+'%';
+  document.getElementById('b_gu').textContent=guer+' voix';
+  s('p_f',pF+'%'); s('p_g',pG+'%'); s('p_gu',pGu+'%');
+  const ecart=four-gher;
+  const winner=four>gher&&four>guer?'FOURNIER':gher>four&&gher>guer?'GHERBI':'GUERARD';
+  const v=document.getElementById('verdict');
+  if(winner==='FOURNIER'){
+    v.className='verdict verdict-win';
+    v.textContent='FOURNIER en tete — '+pF+'% (+'+ecart+' voix sur Gherbi)';
+  } else if(winner==='GHERBI'){
+    v.className='verdict verdict-lose';
+    v.textContent='GHERBI en tete — '+pG+'% (+'+Math.abs(ecart)+' voix sur Fournier)';
+  } else {
+    v.className='verdict verdict-lose';
+    v.textContent='GUERARD en tete — '+pGu+'%';
+  }
+  const prime=17, prop=16;
+  const sF=(winner==='FOURNIER'?prime:0)+Math.round(prop*four/total);
+  const sG=(winner==='GHERBI'?prime:0)+Math.round(prop*gher/total);
+  const sGu=33-sF-sG;
+  s('sn_f',sF); s('sn_g',sG); s('sn_gu',sGu);
+  document.getElementById('decomp').innerHTML=
+    '<strong>FOURNIER :</strong> base '+baseF+' + Jamelin '+rJF+' + Lebrun '+rLF+' + mobilisation pop. '+nPF+' + mobilisation aut. '+nAF+' = <strong>'+four+'</strong>'+
+    '<br><strong>GHERBI :</strong> base '+baseG+' + Jamelin '+rJG+' + Lebrun '+rLG+' + mobilisation pop. '+nPG+' + mobilisation aut. '+nAG+' = <strong>'+gher+'</strong>'+
+    '<br><strong>GUERARD :</strong> base '+baseGu+' + Jamelin '+rJGu+' + Lebrun '+rLGu+' + mobilisation pop. '+nPGu+' + mobilisation aut. '+nAGu+' = <strong>'+guer+'</strong>'+
+    '<br><br>Nouveaux votants : '+popNew+' (quartiers pop.) + '+autNew+' (autres) = '+(popNew+autNew)+
+    ' · Suffrages exprimes projetes : '+total+
+    ' · 33 sieges (17 prime majoritaire + 16 proportionnelle)';
+}
+calc();
+</script>
+</body>
+</html>
