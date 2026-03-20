@@ -64,6 +64,16 @@ h2 { font-family:'DM Serif Display',serif; font-size:20px; font-weight:400; marg
 .decomp strong { color:var(--text2); }
 .footer { margin-top:30px; padding-top:16px; border-top:1px solid var(--border); font-size:11px; color:var(--text3); text-align:center; }
 .confidential { display:inline-block; background:var(--red); color:#fff; font-size:10px; font-weight:700; padding:2px 8px; border-radius:4px; letter-spacing:1px; text-transform:uppercase; margin-bottom:8px; }
+.btn-pdf { display:flex; align-items:center; justify-content:center; gap:8px; margin:24px auto 0; padding:12px 28px; background:var(--purple); color:#fff; border:none; border-radius:8px; font-family:'DM Sans',sans-serif; font-size:14px; font-weight:700; cursor:pointer; transition:background 0.2s; }
+.btn-pdf:hover { background:var(--purple-dark); }
+.btn-pdf:disabled { background:var(--text3); cursor:wait; }
+.btn-pdf svg { width:18px; height:18px; fill:currentColor; }
+#pdf-render { position:absolute; left:-9999px; top:0; }
+#pdf-render .container { padding:30px 36px 30px; }
+#pdf-render .param-table { width:100%; border-collapse:collapse; margin:8px 0 16px; font-size:11px; }
+#pdf-render .param-table th { text-align:left; padding:5px 8px; background:var(--purple-light); color:var(--purple-dark); font-weight:700; font-size:10px; text-transform:uppercase; letter-spacing:0.5px; }
+#pdf-render .param-table td { padding:4px 8px; border-bottom:1px solid var(--border); }
+#pdf-render .param-table td:last-child { text-align:right; font-weight:700; font-variant-numeric:tabular-nums; }
 @media(max-width:600px) {
   .t1-grid { grid-template-columns:repeat(3, 1fr); }
   .slider-row label { min-width:140px; font-size:11px; }
@@ -180,7 +190,12 @@ h2 { font-family:'DM Serif Display',serif; font-size:20px; font-weight:400; marg
     <div class="seat-card" id="s_gu" style="background:var(--blue-light);"><div class="seat-n" style="color:var(--blue);" id="sn_gu"></div><div class="seat-l" style="color:var(--blue);">sieges GUERARD</div></div>
   </div>
   <div class="decomp" id="decomp"></div>
+  <button class="btn-pdf" id="btnPdf" onclick="exportPDF()">
+    <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm-1 1.5L18.5 9H13V3.5zM6 20V4h5v7h7v9H6zm2-6h8v1.5H8V14zm0 3h6v1.5H8V17zm0-6h3v1.5H8V11z"/></svg>
+    Exporter en PDF
+  </button>
 </div>
+<div id="pdf-render"></div>
 <div class="footer">
   Simulateur interne — Campagne FOURNIER Hellemmes 2026<br>
   Donnees T1 officielles · Modele de projection par reports et mobilisation differentielle
@@ -258,6 +273,131 @@ function calc(){
     ' · 33 sieges (17 prime majoritaire + 16 proportionnelle)';
 }
 calc();
+
+function exportPDF(){
+  const btn=document.getElementById('btnPdf');
+  btn.disabled=true; btn.textContent='Generation en cours...';
+  const target=document.getElementById('pdf-render');
+  // Build a clean snapshot for PDF
+  const now=new Date();
+  const dateStr=now.toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'});
+  // Collect current parameter values
+  const params=[
+    {zone:'Quartiers populaires',rows:[
+      ['Hausse participation T2',document.getElementById('v_popUp').textContent],
+      ['Nouveaux votants → FOURNIER',document.getElementById('v_popNF').textContent],
+      ['Nouveaux votants → GHERBI',document.getElementById('v_popNG').textContent],
+      ['Nouveaux votants → GUERARD',document.getElementById('v_popNGu').textContent],
+      ['→ Blancs/nuls',document.getElementById('v_popB').textContent],
+    ]},
+    {zone:'Autres bureaux',rows:[
+      ['Hausse participation T2',document.getElementById('v_autUp').textContent],
+      ['Nouveaux votants → FOURNIER',document.getElementById('v_autNF').textContent],
+      ['Nouveaux votants → GHERBI',document.getElementById('v_autNG').textContent],
+      ['Nouveaux votants → GUERARD',document.getElementById('v_autNGu').textContent],
+      ['→ Blancs/nuls',document.getElementById('v_autB').textContent],
+    ]},
+    {zone:'Reports JAMELIN (1207 voix)',rows:[
+      ['→ FOURNIER',document.getElementById('v_jF').textContent],
+      ['→ GHERBI',document.getElementById('v_jG').textContent],
+      ['→ GUERARD',document.getElementById('v_jGu').textContent],
+      ['→ Abstention',document.getElementById('v_jA').textContent],
+    ]},
+    {zone:'Reports LEBRUN (669 voix)',rows:[
+      ['→ FOURNIER',document.getElementById('v_lF').textContent],
+      ['→ GHERBI',document.getElementById('v_lG').textContent],
+      ['→ GUERARD',document.getElementById('v_lGu').textContent],
+      ['→ Abstention',document.getElementById('v_lA').textContent],
+    ]},
+    {zone:'Retention',rows:[
+      ['FOURNIER',document.getElementById('v_rF').textContent],
+      ['GHERBI',document.getElementById('v_rG').textContent],
+      ['GUERARD',document.getElementById('v_rGu').textContent],
+    ]},
+  ];
+  let paramHTML='';
+  params.forEach(p=>{
+    paramHTML+='<table class="param-table"><tr><th colspan="2">'+p.zone+'</th></tr>';
+    p.rows.forEach(r=>{paramHTML+='<tr><td>'+r[0]+'</td><td>'+r[1]+'</td></tr>';});
+    paramHTML+='</table>';
+  });
+  // Get result bars and verdict
+  const verdictEl=document.getElementById('verdict');
+  const verdictClass=verdictEl.className;
+  const verdictText=verdictEl.textContent;
+  const decompHTML=document.getElementById('decomp').innerHTML;
+  // Seat values
+  const snF=document.getElementById('sn_f').textContent;
+  const snG=document.getElementById('sn_g').textContent;
+  const snGu=document.getElementById('sn_gu').textContent;
+  // Bar values
+  const pF=document.getElementById('p_f').textContent;
+  const pG=document.getElementById('p_g').textContent;
+  const pGu=document.getElementById('p_gu').textContent;
+  const bF=document.getElementById('b_f').textContent;
+  const bG=document.getElementById('b_g').textContent;
+  const bGu=document.getElementById('b_gu').textContent;
+  const bFw=document.getElementById('b_f').style.width;
+  const bGw=document.getElementById('b_g').style.width;
+  const bGuw=document.getElementById('b_gu').style.width;
+
+  target.innerHTML=`
+  <div class="container" style="width:760px;">
+    <div style="text-align:center; margin-bottom:16px;">
+      <span class="confidential">usage interne</span>
+      <h1>Projection T2 — Hellemmes 2026</h1>
+      <p class="subtitle">Simulation generee le ${dateStr}</p>
+    </div>
+    <h2>Hypotheses de simulation</h2>
+    ${paramHTML}
+    <div class="result-section" style="margin-top:16px;">
+      <h2 style="border:none; margin:0 0 14px; padding:0;">Projection T2 — 22 mars 2026</h2>
+      <div class="bar-row">
+        <span class="bar-name" style="color:#7B2D8E;">FOURNIER</span>
+        <div class="bar-track"><div class="bar-fill" style="background:#7B2D8E;width:${bFw}">${bF}</div></div>
+        <span class="bar-pct" style="color:#7B2D8E;">${pF}</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-name" style="color:#C62828;">GHERBI</span>
+        <div class="bar-track"><div class="bar-fill" style="background:#C62828;width:${bGw}">${bG}</div></div>
+        <span class="bar-pct" style="color:#C62828;">${pG}</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-name" style="color:#1565C0;">GUERARD</span>
+        <div class="bar-track"><div class="bar-fill" style="background:#1565C0;width:${bGuw}">${bGu}</div></div>
+        <span class="bar-pct" style="color:#1565C0;">${pGu}</span>
+      </div>
+      <div class="${verdictClass}">${verdictText}</div>
+      <div class="seats-grid">
+        <div class="seat-card" style="background:#E8D5F0;"><div class="seat-n" style="color:#7B2D8E;">${snF}</div><div class="seat-l" style="color:#7B2D8E;">sieges FOURNIER</div></div>
+        <div class="seat-card" style="background:#FFEBEE;"><div class="seat-n" style="color:#C62828;">${snG}</div><div class="seat-l" style="color:#C62828;">sieges GHERBI</div></div>
+        <div class="seat-card" style="background:#E3F2FD;"><div class="seat-n" style="color:#1565C0;">${snGu}</div><div class="seat-l" style="color:#1565C0;">sieges GUERARD</div></div>
+      </div>
+      <div class="decomp">${decompHTML}</div>
+    </div>
+    <div class="footer" style="margin-top:20px;">
+      Simulateur interne — Campagne FOURNIER Hellemmes 2026<br>
+      Donnees T1 officielles · Modele de projection par reports et mobilisation differentielle
+    </div>
+  </div>`;
+
+  const script=document.createElement('script');
+  script.src='https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.2/html2pdf.bundle.min.js';
+  script.onload=function(){
+    html2pdf().set({
+      margin:[10,8,10,8],
+      filename:'projection-T2-hellemmes-'+now.toISOString().slice(0,10)+'.pdf',
+      image:{type:'jpeg',quality:0.98},
+      html2canvas:{scale:2,useCORS:true,width:760},
+      jsPDF:{unit:'mm',format:'a4',orientation:'portrait'}
+    }).from(target.firstElementChild).save().then(()=>{
+      btn.disabled=false;
+      btn.innerHTML='<svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:currentColor"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm-1 1.5L18.5 9H13V3.5zM6 20V4h5v7h7v9H6zm2-6h8v1.5H8V14zm0 3h6v1.5H8V17zm0-6h3v1.5H8V11z"/></svg> Exporter en PDF';
+      target.innerHTML='';
+    });
+  };
+  document.head.appendChild(script);
+}
 </script>
 </body>
 </html>
